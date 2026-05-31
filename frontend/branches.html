@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branches - Ramz Al Wahda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/custom.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 flex h-screen overflow-hidden">
+
+    <!-- Sidebar (Same as Dashboard) -->
+    <aside id="sidebar" class="bg-slate-900 text-slate-300 w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full lg:relative lg:translate-x-0 transition duration-200 ease-in-out z-20 shadow-xl">
+        <div class="text-white flex items-center space-x-2 px-4 mb-8">
+            <i class="fas fa-building text-blue-500 text-2xl"></i>
+            <span class="text-2xl font-bold tracking-wider">Ramz Al Wahda</span>
+        </div>
+        
+        <nav class="space-y-2 px-2">
+            <a href="dashboard.html" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-white">
+                <i class="fas fa-chart-line mr-2"></i> Dashboard
+            </a>
+            <a href="branches.html" class="block py-2.5 px-4 rounded transition duration-200 bg-blue-600 text-white">
+                <i class="fas fa-code-branch mr-2"></i> Branches
+            </a>
+            <a href="employees.html" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-white">
+                <i class="fas fa-users mr-2"></i> Employees
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="flex-1 flex flex-col h-screen transition-all duration-200">
+        <!-- Top Navbar -->
+        <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center z-10 relative">
+            <button id="sidebarToggleBtn" class="text-slate-500 hover:text-slate-700 focus:outline-none lg:hidden">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            <div class="flex-1 lg:flex-none"></div>
+            
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">A</div>
+                    <span id="userProfileName" class="text-sm font-medium text-slate-700 hidden sm:block">Admin</span>
+                    <button id="logoutBtn" class="ml-4 text-sm text-red-500 hover:text-red-700 transition"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 overflow-y-auto p-6 bg-slate-50 fade-in">
+            <div class="mb-8 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800">Branch Management</h2>
+                    <p class="text-slate-500 text-sm mt-1">Manage all business branches</p>
+                </div>
+                <button onclick="document.getElementById('addBranchModal').classList.remove('hidden')" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition text-sm">
+                    <i class="fas fa-plus mr-1"></i> Add Branch
+                </button>
+            </div>
+
+            <!-- Branches Grid -->
+            <div id="branchesGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- Loading State -->
+                <div class="col-span-full text-center text-slate-500 py-10">Loading branches...</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Branch Modal -->
+    <div id="addBranchModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 modal-backdrop transition-opacity" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full fade-in">
+                <form id="addBranchForm">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4" id="modal-title">Add New Branch</h3>
+                        <div>
+                            <label for="branchName" class="block text-sm font-medium text-gray-700">Branch Name</label>
+                            <input type="text" id="branchName" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                            Save
+                        </button>
+                        <button type="button" onclick="document.getElementById('addBranchModal').classList.add('hidden')" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Branch Modal -->
+    <div id="editBranchModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 modal-backdrop transition-opacity" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full fade-in">
+                <form id="editBranchForm">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Edit Branch</h3>
+                        <div>
+                            <label for="editBranchName" class="block text-sm font-medium text-gray-700">Branch Name</label>
+                            <input type="text" id="editBranchName" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                            Update
+                        </button>
+                        <button type="button" onclick="document.getElementById('editBranchModal').classList.add('hidden')" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Branch Modal -->
+    <div id="deleteBranchModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 modal-backdrop transition-opacity" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full fade-in">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fas fa-exclamation-triangle text-red-600"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Delete Branch</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">Are you sure you want to delete this branch? This action will permanently remove it.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="confirmDeleteBranchBtn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Delete</button>
+                    <button type="button" onclick="document.getElementById('deleteBranchModal').classList.add('hidden')" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBranches();
+
+            document.getElementById('addBranchForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                const name = document.getElementById('branchName').value;
+                try {
+                    await fetchAPI('/branches/', {
+                        method: 'POST',
+                        body: JSON.stringify({ name })
+                    });
+                    document.getElementById('addBranchModal').classList.add('hidden');
+                    e.target.reset();
+                    showToast('Branch added successfully');
+                    loadBranches();
+                } catch (error) {
+                    showToast(error.message, 'error');
+                } finally {
+                    btn.disabled = false;
+                }
+            });
+        });
+
+        async function loadBranches() {
+            const grid = document.getElementById('branchesGrid');
+            try {
+                const branches = await fetchAPI('/branches/');
+                grid.innerHTML = '';
+                
+                if (branches.length === 0) {
+                    grid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-10">No branches found.</div>';
+                    return;
+                }
+
+                branches.forEach(branch => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col justify-between hover:shadow-md transition';
+                    card.innerHTML = `
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center cursor-pointer" onclick="window.location.href='employees.html?branch_id=${branch.id}'">
+                                <i class="fas fa-building text-2xl"></i>
+                            </div>
+                            <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-green-200">Active</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-1">${branch.name}</h3>
+                        <div class="text-slate-500 text-sm mb-4 flex items-center gap-2">
+                            <i class="fas fa-users"></i> ${branch.employee_count} Employees
+                        </div>
+                        <div class="flex gap-2 mt-auto">
+                            <button onclick="window.location.href='employees.html?branch_id=${branch.id}'" class="flex-1 py-2 bg-slate-50 text-blue-600 font-medium rounded-lg text-sm border border-slate-100 hover:bg-slate-100 transition">
+                                View &rarr;
+                            </button>
+                            <button onclick="openEditBranchModal(${branch.id}, '${branch.name}')" class="px-3 py-2 bg-slate-50 text-slate-600 font-medium rounded-lg text-sm border border-slate-100 hover:bg-slate-100 transition" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="openDeleteBranchModal(${branch.id})" class="px-3 py-2 bg-slate-50 text-red-600 font-medium rounded-lg text-sm border border-slate-100 hover:bg-red-50 transition" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (e) {
+                showToast('Failed to load branches', 'error');
+            }
+        }
+
+        let currentEditBranchId = null;
+        let currentDeleteBranchId = null;
+
+        function openEditBranchModal(id, name) {
+            currentEditBranchId = id;
+            document.getElementById('editBranchName').value = name;
+            document.getElementById('editBranchModal').classList.remove('hidden');
+        }
+
+        function openDeleteBranchModal(id) {
+            currentDeleteBranchId = id;
+            document.getElementById('deleteBranchModal').classList.remove('hidden');
+        }
+
+        document.getElementById('editBranchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            const name = document.getElementById('editBranchName').value;
+            try {
+                await fetchAPI('/branches/' + currentEditBranchId, {
+                    method: 'PUT',
+                    body: JSON.stringify({ name })
+                });
+                document.getElementById('editBranchModal').classList.add('hidden');
+                e.target.reset();
+                showToast('Branch updated successfully');
+                loadBranches();
+            } catch (error) {
+                showToast(error.message, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        document.getElementById('confirmDeleteBranchBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('confirmDeleteBranchBtn');
+            btn.disabled = true;
+            try {
+                await fetchAPI('/branches/' + currentDeleteBranchId, {
+                    method: 'DELETE'
+                });
+                document.getElementById('deleteBranchModal').classList.add('hidden');
+                showToast('Branch deleted successfully');
+                loadBranches();
+            } catch (error) {
+                showToast(error.message, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

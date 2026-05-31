@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile - Ramz Al Wahda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/custom.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 flex h-screen overflow-hidden">
+
+    <!-- Sidebar (Same as Dashboard) -->
+    <aside id="sidebar" class="bg-slate-900 text-slate-300 w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full lg:relative lg:translate-x-0 transition duration-200 ease-in-out z-20 shadow-xl">
+        <div class="text-white flex items-center space-x-2 px-4 mb-8">
+            <i class="fas fa-building text-blue-500 text-2xl"></i>
+            <span class="text-2xl font-bold tracking-wider">Ramz Al Wahda</span>
+        </div>
+        
+        <nav class="space-y-2 px-2">
+            <a href="dashboard.html" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-white">
+                <i class="fas fa-chart-line mr-2"></i> Dashboard
+            </a>
+            <a href="branches.html" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-white">
+                <i class="fas fa-code-branch mr-2"></i> Branches
+            </a>
+            <a href="employees.html" class="block py-2.5 px-4 rounded transition duration-200 bg-blue-600 text-white">
+                <i class="fas fa-users mr-2"></i> Employees
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="flex-1 flex flex-col h-screen transition-all duration-200 overflow-y-auto">
+        <!-- Top Navbar -->
+        <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center z-10 sticky top-0">
+            <div class="flex items-center gap-4">
+                <button id="sidebarToggleBtn" class="text-slate-500 hover:text-slate-700 focus:outline-none lg:hidden">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <a href="employees.html" class="text-slate-500 hover:text-slate-800 transition"><i class="fas fa-arrow-left mr-1"></i> Back</a>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">A</div>
+                    <span id="userProfileName" class="text-sm font-medium text-slate-700 hidden sm:block">Admin</span>
+                    <button id="logoutBtn" class="ml-4 text-sm text-red-500 hover:text-red-700 transition"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 p-6 max-w-5xl mx-auto w-full fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="pageTitle" class="text-2xl font-bold text-slate-800">Employee Profile</h2>
+                <div id="actionButtons" class="space-x-2">
+                    <!-- Dynamic buttons injected here based on mode -->
+                </div>
+            </div>
+
+            <form id="employeeForm" class="space-y-6">
+                <!-- Top Section: Photo & Quick Info -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col md:flex-row gap-6 items-start">
+                    <div class="w-32 h-32 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden relative group shrink-0">
+                        <img id="photoPreview" src="" alt="Profile Photo" class="w-full h-full object-cover hidden">
+                        <i id="photoPlaceholder" class="fas fa-user text-4xl text-slate-300"></i>
+                        <div id="photoOverlay" class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer">
+                            <span class="text-white text-xs font-medium"><i class="fas fa-camera mr-1"></i> Change</span>
+                        </div>
+                        <input type="file" id="photoInput" accept="image/*" class="hidden">
+                    </div>
+                    <div class="flex-1 w-full">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Full Name *</label>
+                                <input type="text" id="full_name" required class="w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Status</label>
+                                <select id="status" class="w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Phone Number *</label>
+                                <input type="tel" id="phone_number" required class="w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Branch *</label>
+                                <select id="branch_id" required class="w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle Layout: Address & Employment -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <!-- Address & Location -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-4 border-b pb-2">Address & Location</h3>
+                        <div class="space-y-4 flex-1">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Place/City *</label>
+                                <input type="text" id="place" required class="w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            </div>
+                            <div class="h-full">
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Full Address *</label>
+                                <textarea id="address" rows="5" required class="w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm h-32"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Employment Info -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-4 border-b pb-2">Employment Info</h3>
+                        <div class="space-y-4 flex-1">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Joined Date *</label>
+                                    <input type="date" id="joined_date" required class="w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Salary (AED) *</label>
+                                    <input type="number" id="salary" required class="w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Pending Salary (AED)</label>
+                                    <input type="number" id="salary_pending" value="0" class="w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+                <!-- Bottom Sections (Only visible if editing existing user) -->
+                <div class="space-y-6">
+                    <!-- Integrated Document Management Section -->
+                    <div id="documentsSection" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 hidden">
+                        <div class="flex justify-between items-center border-b pb-4 mb-4">
+                            <h3 class="text-lg font-semibold text-slate-800">Document Management</h3>
+                            <button type="button" onclick="openUploadDocModal('Other')" class="text-sm bg-blue-50 text-blue-600 px-3 py-1.5 rounded hover:bg-blue-100 font-medium transition"><i class="fas fa-plus mr-1"></i> Custom Doc</button>
+                        </div>
+                        
+                        <!-- Core Documents Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6" id="coreDocsGrid">
+                                <!-- Cards injected via JS -->
+                            </div>
+
+                            <div id="otherDocsSection" class="mt-6 border-t pt-4">
+                                <h4 class="text-sm font-semibold text-slate-600 mb-3">Other Documents</h4>
+                                <div id="otherDocsList" class="space-y-3">
+                                    <!-- Other docs injected via JS -->
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Remarks Section (Only visible if editing existing user) -->
+                        <div id="remarksSection" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 hidden">
+                            <h3 class="text-lg font-semibold text-slate-800 mb-4 border-b pb-2">Remarks / Notes</h3>
+                            <div class="flex gap-2 mb-4">
+                                <input type="text" id="newRemark" placeholder="Add a new note..." class="flex-1 border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 sm:text-sm">
+                                <button type="button" id="addRemarkBtn" class="bg-slate-800 text-white px-4 py-2 rounded shadow hover:bg-slate-700 text-sm">Add</button>
+                            </div>
+                        <div id="remarksList" class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                            <!-- Remarks populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Submit Bottom -->
+                <div class="pt-6 pb-12 flex justify-end gap-4 items-center">
+                    <button type="button" onclick="window.history.back()" class="text-slate-600 hover:text-slate-800 font-medium px-4 py-2 transition">Cancel</button>
+                    <button type="submit" id="saveEmployeeBtn" class="bg-slate-900 text-white px-8 py-3 rounded-lg shadow-md hover:bg-blue-600 transition text-sm font-bold flex items-center gap-2">
+                        <i class="fas fa-save"></i> Save Employee details
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- Upload Document Modal -->
+    <div id="uploadDocModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 modal-backdrop transition-opacity" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full fade-in">
+                <form id="uploadDocForm">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Upload Document</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Document Title</label>
+                                <input type="text" id="docTitle" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Document Type</label>
+                                <select id="docType" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    <option value="Passport">Passport</option>
+                                    <option value="Visa">Visa</option>
+                                    <option value="Emirates ID">Emirates ID</option>
+                                    <option value="Insurance">Insurance</option>
+                                    <option value="Labour Card">Labour Card</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Issue Date</label>
+                                    <input type="date" id="docIssueDate" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Expiry Date</label>
+                                    <input type="date" id="docExpiryDate" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Photos (Front & Back)</label>
+                                <div class="space-y-2">
+                                    <input type="file" id="docFile1" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                    <input type="file" id="docFile2" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                </div>
+                                <p class="text-xs text-slate-500 mt-1">Upload max 2 photos. Uploading new files will replace existing ones.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Upload</button>
+                        <button type="button" onclick="document.getElementById('uploadDocModal').classList.add('hidden')" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="deleteModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 modal-backdrop transition-opacity" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full fade-in">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fas fa-exclamation-triangle text-red-600"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Move to Trash</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">Are you sure you want to delete this employee? They will be moved to the Trash for 30 days and can be restored.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="confirmDeleteBtn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Delete</button>
+                    <button type="button" onclick="document.getElementById('deleteModal').classList.add('hidden')" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const employeeId = urlParams.get('id');
+        const isEditMode = !!employeeId;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadBranchOptions();
+
+            if (isEditMode) {
+                document.getElementById('pageTitle').textContent = 'Edit Employee Profile';
+                document.getElementById('documentsSection').classList.remove('hidden');
+                document.getElementById('remarksSection').classList.remove('hidden');
+                
+                const actionBtns = document.getElementById('actionButtons');
+                actionBtns.innerHTML = `
+                    <button type="button" onclick="document.getElementById('deleteModal').classList.remove('hidden')" class="bg-white border border-red-200 text-red-600 px-4 py-2 rounded shadow-sm hover:bg-red-50 transition text-sm flex items-center">
+                        <i class="fas fa-trash mr-1"></i> Delete
+                    </button>
+                `;
+
+                await loadEmployeeData();
+            }
+
+            // Form Submission
+            document.getElementById('employeeForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('saveEmployeeBtn');
+                btn.disabled = true;
+                btn.textContent = 'Saving...';
+
+                const formData = {
+                    full_name: document.getElementById('full_name').value,
+                    place: document.getElementById('place').value,
+                    address: document.getElementById('address').value,
+                    phone_number: document.getElementById('phone_number').value,
+                    branch_id: parseInt(document.getElementById('branch_id').value),
+                    emirates_id: "TBD", // Dummy values as these are now in documents
+                    emirates_id_expiry: "2099-12-31T00:00:00Z",
+                    visa_date: "2099-12-31T00:00:00Z",
+                    visa_expiry: "2099-12-31T00:00:00Z",
+                    passport_number: "TBD",
+                    joined_date: document.getElementById('joined_date').value + "T00:00:00Z",
+                    salary: parseFloat(document.getElementById('salary').value),
+                    salary_pending: parseFloat(document.getElementById('salary_pending').value || 0),
+                    status: document.getElementById('status').value
+                };
+
+                try {
+                    let savedEmp;
+                    if (isEditMode) {
+                        savedEmp = await fetchAPI(`/employees/${employeeId}`, {
+                            method: 'PUT',
+                            body: JSON.stringify(formData)
+                        });
+                        showToast('Employee updated successfully');
+                    } else {
+                        savedEmp = await fetchAPI('/employees/', {
+                            method: 'POST',
+                            body: JSON.stringify(formData)
+                        });
+                        showToast('Employee created successfully');
+                        // Redirect to edit mode so they can upload files
+                        setTimeout(() => window.location.href = `employee_detail.html?id=${savedEmp.id}`, 1500);
+                    }
+                } catch (error) {
+                    showToast(error.message, 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Save Employee';
+                }
+            });
+
+            // Photo Upload
+            document.getElementById('photoOverlay').addEventListener('click', () => {
+                if(!isEditMode) {
+                    showToast('Please save the employee first before uploading a photo.', 'error');
+                    return;
+                }
+                document.getElementById('photoInput').click();
+            });
+
+            document.getElementById('photoInput').addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if(!file || !isEditMode) return;
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    const res = await fetchAPI(`/employees/${employeeId}/upload_photo`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    document.getElementById('photoPreview').src = `http://localhost:8000${res.photo_url}`;
+                    document.getElementById('photoPreview').classList.remove('hidden');
+                    document.getElementById('photoPlaceholder').classList.add('hidden');
+                    showToast('Photo uploaded successfully');
+                } catch (error) {
+                    showToast('Failed to upload photo', 'error');
+                }
+            });
+
+            // Document Upload Modal state
+            window.openUploadDocModal = function(type) {
+                document.getElementById('uploadDocForm').reset();
+                document.getElementById('docType').value = type;
+                if (type !== 'Other') {
+                    document.getElementById('docTitle').value = type;
+                }
+                document.getElementById('uploadDocModal').classList.remove('hidden');
+            }
+
+            // Document Upload
+            document.getElementById('uploadDocForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if(!isEditMode) return;
+
+                const file1 = document.getElementById('docFile1').files[0];
+                const file2 = document.getElementById('docFile2').files[0];
+                const title = document.getElementById('docTitle').value;
+                const type = document.getElementById('docType').value;
+
+                const issueDate = document.getElementById('docIssueDate').value;
+                const expiryDate = document.getElementById('docExpiryDate').value;
+
+                const formData = new FormData();
+                if (file1) formData.append('file1', file1);
+                if (file2) formData.append('file2', file2);
+                formData.append('title', title);
+                formData.append('document_type', type);
+                if (issueDate) formData.append('issue_date', issueDate);
+                if (expiryDate) formData.append('expiry_date', expiryDate);
+
+                try {
+                    await fetchAPI(`/employees/${employeeId}/upload_document`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    document.getElementById('uploadDocModal').classList.add('hidden');
+                    document.getElementById('uploadDocForm').reset();
+                    showToast('Document saved successfully');
+                    loadEmployeeData(); // Reload to show new doc
+                } catch (error) {
+                    showToast('Save failed', 'error');
+                }
+            });
+
+            // Add Remark
+            document.getElementById('addRemarkBtn').addEventListener('click', async () => {
+                if(!isEditMode) return;
+                const note = document.getElementById('newRemark').value;
+                if(!note) return;
+
+                try {
+                    await fetchAPI(`/employees/${employeeId}/remarks`, {
+                        method: 'POST',
+                        body: JSON.stringify({note})
+                    });
+                    document.getElementById('newRemark').value = '';
+                    loadEmployeeData();
+                } catch (error) {
+                    showToast('Failed to add remark', 'error');
+                }
+            });
+
+            // Delete action
+            document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+                if(!isEditMode) return;
+                try {
+                    await fetchAPI(`/employees/${employeeId}`, { method: 'DELETE' });
+                    window.location.href = 'employees.html';
+                } catch (error) {
+                    showToast('Failed to delete', 'error');
+                    document.getElementById('deleteModal').classList.add('hidden');
+                }
+            });
+        });
+
+        async function loadBranchOptions() {
+            try {
+                const branches = await fetchAPI('/branches/');
+                const select = document.getElementById('branch_id');
+                branches.forEach(b => {
+                    const option = document.createElement('option');
+                    option.value = b.id;
+                    option.textContent = b.name;
+                    select.appendChild(option);
+                });
+            } catch (e) {
+                console.error("Failed to load branches", e);
+            }
+        }
+
+        async function loadEmployeeData() {
+            try {
+                const emp = await fetchAPI(`/employees/${employeeId}`);
+                
+                // Populate text/number fields
+                const fields = ['full_name', 'place', 'address', 'phone_number', 'branch_id', 'salary', 'salary_pending', 'status'];
+                fields.forEach(f => {
+                    if(document.getElementById(f)) document.getElementById(f).value = emp[f];
+                });
+
+                // Populate date fields
+                const dateFields = ['joined_date'];
+                dateFields.forEach(f => {
+                    if(emp[f]) document.getElementById(f).value = emp[f].split('T')[0];
+                });
+
+                // Photo
+                if (emp.photo_url) {
+                    document.getElementById('photoPreview').src = `http://localhost:8000${emp.photo_url}`;
+                    document.getElementById('photoPreview').classList.remove('hidden');
+                    document.getElementById('photoPlaceholder').classList.add('hidden');
+                }
+
+                // Documents
+                const coreTypes = ['Passport', 'Emirates ID', 'Visa', 'Labour Card', 'Insurance'];
+                const coreGrid = document.getElementById('coreDocsGrid');
+                const otherList = document.getElementById('otherDocsList');
+                coreGrid.innerHTML = '';
+                otherList.innerHTML = '';
+                
+                const docsMap = {};
+                if(emp.documents) {
+                    emp.documents.forEach(doc => {
+                        if (coreTypes.includes(doc.document_type)) {
+                            docsMap[doc.document_type] = doc;
+                        } else {
+                            renderOtherDoc(doc, otherList);
+                        }
+                    });
+                }
+
+                coreTypes.forEach(type => {
+                    renderCoreDocCard(type, docsMap[type], coreGrid);
+                });
+
+                if(otherList.children.length === 0) {
+                    otherList.innerHTML = '<div class="text-sm text-slate-500 italic">No custom documents uploaded.</div>';
+                }
+
+                // Remarks
+                const remList = document.getElementById('remarksList');
+                remList.innerHTML = '';
+                if(emp.remarks && emp.remarks.length > 0) {
+                    // Sort descending by date
+                    emp.remarks.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).forEach(rem => {
+                        const date = new Date(rem.created_at).toLocaleString();
+                        remList.innerHTML += `
+                            <div class="p-3 bg-blue-50 border border-blue-100 rounded-lg text-sm relative group transition hover:shadow-sm">
+                                <div class="text-slate-800 mb-2 pr-6 leading-relaxed">${rem.note}</div>
+                                <div class="text-xs text-slate-500 flex justify-between items-center mt-1 pt-2 border-t border-blue-100">
+                                    <span><i class="far fa-clock mr-1"></i> ${date}</span>
+                                    <button type="button" onclick="deleteRemark(${rem.id})" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition" title="Delete Remark">
+                                        <i class="fas fa-trash text-[10px]"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    remList.innerHTML = '<div class="text-sm text-slate-500 italic">No remarks added.</div>';
+                }
+            } catch (error) {
+                showToast('Failed to load employee data', 'error');
+            }
+        }
+
+        function renderCoreDocCard(type, doc, container) {
+            const card = document.createElement('div');
+            card.className = 'bg-slate-50 border border-slate-200 rounded-lg p-4 flex flex-col justify-between';
+            
+            let contentHtml = '<div class="text-xs text-slate-500 italic mb-2">Not uploaded yet.</div>';
+            if (doc) {
+                const issue = doc.issue_date ? doc.issue_date.split('T')[0] : 'N/A';
+                let expiry = 'N/A';
+                let isExpiring = false;
+                if (doc.expiry_date) {
+                    expiry = doc.expiry_date.split('T')[0];
+                    if (new Date(doc.expiry_date) < new Date(Date.now() + 60*24*60*60*1000)) {
+                        isExpiring = true;
+                    }
+                }
+                
+                let photosHtml = '';
+                if (doc.file_url) photosHtml += `<a href="http://localhost:8000${doc.file_url}" target="_blank" class="text-blue-600 hover:underline text-xs mr-2"><i class="fas fa-image"></i> Photo 1</a>`;
+                if (doc.file_url_2) photosHtml += `<a href="http://localhost:8000${doc.file_url_2}" target="_blank" class="text-blue-600 hover:underline text-xs"><i class="fas fa-image"></i> Photo 2</a>`;
+                
+                contentHtml = `
+                    <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+                        <div><span class="text-slate-500 text-xs block">Issue Date</span><span class="font-medium text-slate-800">${issue}</span></div>
+                        <div><span class="text-slate-500 text-xs block">Expiry Date</span><span class="font-medium ${isExpiring ? 'text-red-600' : 'text-slate-800'}">${expiry}</span></div>
+                    </div>
+                    <div class="flex items-center mt-2">${photosHtml || '<span class="text-xs text-slate-400">No photos</span>'}</div>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="flex justify-between items-center mb-3">
+                    <h4 class="font-semibold text-slate-800 flex items-center gap-2">
+                        <i class="fas ${getIconForDocType(type)} text-slate-400"></i> ${type}
+                    </h4>
+                    <button type="button" onclick="openUploadDocModal('${type}')" class="text-xs bg-white border border-slate-300 text-slate-600 px-2 py-1 rounded hover:bg-slate-100 transition">
+                        ${doc ? '<i class="fas fa-edit"></i> Edit' : '<i class="fas fa-upload"></i> Add'}
+                    </button>
+                </div>
+                ${contentHtml}
+            `;
+            container.appendChild(card);
+        }
+
+        function renderOtherDoc(doc, container) {
+            let datesHtml = '';
+            if (doc.issue_date || doc.expiry_date) {
+                const issue = doc.issue_date ? doc.issue_date.split('T')[0] : 'N/A';
+                const expiry = doc.expiry_date ? doc.expiry_date.split('T')[0] : 'N/A';
+                const isExpiring = doc.expiry_date && new Date(doc.expiry_date) < new Date(Date.now() + 60*24*60*60*1000);
+                datesHtml = `<div class="text-xs text-slate-500 mt-1">Issue: ${issue} | Expiry: <span class="${isExpiring ? 'text-red-600 font-bold' : ''}">${expiry}</span></div>`;
+            }
+            
+            let photosHtml = '';
+            if (doc.file_url) photosHtml += `<a href="http://localhost:8000${doc.file_url}" target="_blank" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-download"></i> P1</a>`;
+            if (doc.file_url_2) photosHtml += `<a href="http://localhost:8000${doc.file_url_2}" target="_blank" class="text-blue-600 hover:text-blue-800"><i class="fas fa-download"></i> P2</a>`;
+
+            const el = document.createElement('div');
+            el.className = 'flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-lg text-sm';
+            el.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-file-alt text-slate-400 text-lg"></i>
+                    <div>
+                        <div class="font-medium text-slate-800">${doc.title}</div>
+                        ${datesHtml}
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    ${photosHtml}
+                    <button type="button" onclick="deleteDocument(${doc.id})" class="text-red-500 hover:text-red-700 p-1.5 rounded-md hover:bg-red-50 transition" title="Delete Document">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(el);
+        }
+
+        async function deleteRemark(remarkId) {
+            if(!confirm("Are you sure you want to delete this remark?")) return;
+            try {
+                await fetchAPI(`/employees/${employeeId}/remarks/${remarkId}`, { method: 'DELETE' });
+                showToast('Remark deleted successfully');
+                loadEmployeeData(); // Refresh UI
+            } catch(e) {
+                showToast('Failed to delete remark', 'error');
+            }
+        }
+
+        async function deleteDocument(docId) {
+            if(!confirm("Are you sure you want to delete this document?")) return;
+            try {
+                await fetchAPI(`/employees/${employeeId}/documents/${docId}`, { method: 'DELETE' });
+                showToast('Document deleted successfully');
+                loadEmployeeData(); // Refresh UI
+            } catch(e) {
+                showToast('Failed to delete document', 'error');
+            }
+        }
+
+        function getIconForDocType(type) {
+            switch(type) {
+                case 'Passport': return 'fa-passport';
+                case 'Visa': return 'fa-stamp';
+                case 'Emirates ID': return 'fa-id-card';
+                case 'Labour Card': return 'fa-briefcase';
+                case 'Insurance': return 'fa-shield-alt';
+                default: return 'fa-file-alt';
+            }
+        }
+    </script>
+</body>
+</html>
