@@ -2,7 +2,7 @@
 const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 const API_BASE_URL = IS_LOCAL 
     ? 'http://localhost:8000/api' 
-    : 'https://ramz-backend.onrender.com/api'; // This will be the render URL
+    : 'https://ramz-backend-g9ad.onrender.com/api'; // Actual render URL
 
 async function fetchAPI(endpoint, options = {}) {
     const token = localStorage.getItem('token');
