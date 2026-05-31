@@ -6,6 +6,31 @@ const API_BASE_URL = IS_LOCAL
 
 async function fetchAPI(endpoint, options = {}) {
     const token = localStorage.getItem('token');
+    const method = options.method || 'GET';
+    const cacheKey = `ramz_cache_${endpoint}`;
+    
+    // Clear cache on write operations to ensure fresh data
+    if (method !== 'GET') {
+        Object.keys(sessionStorage).forEach(key => {
+            if (key.startsWith('ramz_cache_')) sessionStorage.removeItem(key);
+        });
+    }
+
+    // Check cache for GET requests
+    if (method === 'GET') {
+        const cachedStr = sessionStorage.getItem(cacheKey);
+        if (cachedStr) {
+            try {
+                const cached = JSON.parse(cachedStr);
+                const isExpired = Date.now() - cached.timestamp > 5 * 60 * 1000; // 5 minutes
+                if (!isExpired) {
+                    return cached.data;
+                }
+            } catch (e) {
+                sessionStorage.removeItem(cacheKey);
+            }
+        }
+    }
     
     const headers = {
         'Content-Type': 'application/json',
@@ -40,6 +65,14 @@ async function fetchAPI(endpoint, options = {}) {
 
         if (!response.ok) {
             throw new Error(data.detail || 'An error occurred');
+        }
+
+        // Cache the successful GET response
+        if (method === 'GET') {
+            sessionStorage.setItem(cacheKey, JSON.stringify({
+                timestamp: Date.now(),
+                data: data
+            }));
         }
 
         return data;
