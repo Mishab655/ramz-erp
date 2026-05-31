@@ -15,12 +15,19 @@ if SUPABASE_URL and SUPABASE_KEY:
 
 def upload_file_handler(file_obj, filename: str) -> str:
     if supabase:
-        file_bytes = file_obj.read()
-        supabase.storage.from_("ramz-uploads").upload(filename, file_bytes)
-        res = supabase.storage.from_("ramz-uploads").get_public_url(filename)
-        return res
-    else:
-        file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "uploads", filename)
+        try:
+            file_bytes = file_obj.read()
+            # Use upsert to overwrite if file already exists
+            supabase.storage.from_("ramz-uploads").upload(filename, file_bytes, file_options={"upsert": "true"})
+            res = supabase.storage.from_("ramz-uploads").get_public_url(filename)
+            return res
+        except Exception as e:
+            print(f"Supabase upload error: {e}")
+            # Fallback to local if Supabase fails (e.g. bucket doesn't exist)
+            pass
+    
+    # Fallback to local storage
+    file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "uploads", filename)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file_obj, buffer)
