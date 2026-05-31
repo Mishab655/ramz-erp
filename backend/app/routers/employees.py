@@ -28,10 +28,10 @@ def upload_file_handler(file_obj, filename: str) -> str:
     
     # Fallback to local storage
     file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "uploads", filename)
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file_obj, buffer)
-        return f"/uploads/{filename}"
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file_obj, buffer)
+    return f"/uploads/{filename}"
 from .auth import get_current_user
 
 router = APIRouter(prefix="/employees", tags=["Employees"])
