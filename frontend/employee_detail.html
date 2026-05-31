@@ -270,6 +270,12 @@
         const employeeId = urlParams.get('id');
         const isEditMode = !!employeeId;
 
+        function formatFileUrl(url) {
+            if (!url) return '';
+            if (url.startsWith('http')) return url;
+            return API_BASE_URL.replace('/api', '') + url;
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             await loadBranchOptions();
 
@@ -358,7 +364,7 @@
                         method: 'POST',
                         body: formData
                     });
-                    document.getElementById('photoPreview').src = `http://localhost:8000${res.photo_url}`;
+                    document.getElementById('photoPreview').src = formatFileUrl(res.photo_url);
                     document.getElementById('photoPreview').classList.remove('hidden');
                     document.getElementById('photoPlaceholder').classList.add('hidden');
                     showToast('Photo uploaded successfully');
@@ -476,7 +482,7 @@
 
                 // Photo
                 if (emp.photo_url) {
-                    document.getElementById('photoPreview').src = `http://localhost:8000${emp.photo_url}`;
+                    document.getElementById('photoPreview').src = formatFileUrl(emp.photo_url);
                     document.getElementById('photoPreview').classList.remove('hidden');
                     document.getElementById('photoPlaceholder').classList.add('hidden');
                 }
@@ -551,8 +557,14 @@
                 }
                 
                 let photosHtml = '';
-                if (doc.file_url) photosHtml += `<a href="http://localhost:8000${doc.file_url}" target="_blank" class="text-blue-600 hover:underline text-xs mr-2"><i class="fas fa-image"></i> Photo 1</a>`;
-                if (doc.file_url_2) photosHtml += `<a href="http://localhost:8000${doc.file_url_2}" target="_blank" class="text-blue-600 hover:underline text-xs"><i class="fas fa-image"></i> Photo 2</a>`;
+                if (doc.file_url) {
+                    photosHtml += `<a href="${formatFileUrl(doc.file_url)}" target="_blank" class="text-blue-600 hover:underline text-xs mr-2"><i class="fas fa-eye"></i> View 1</a>`;
+                    photosHtml += `<a href="${formatFileUrl(doc.file_url)}?download=" class="text-green-600 hover:underline text-xs mr-2"><i class="fas fa-download"></i> DL 1</a>`;
+                }
+                if (doc.file_url_2) {
+                    photosHtml += `<a href="${formatFileUrl(doc.file_url_2)}" target="_blank" class="text-blue-600 hover:underline text-xs mr-2"><i class="fas fa-eye"></i> View 2</a>`;
+                    photosHtml += `<a href="${formatFileUrl(doc.file_url_2)}?download=" class="text-green-600 hover:underline text-xs"><i class="fas fa-download"></i> DL 2</a>`;
+                }
                 
                 contentHtml = `
                     <div class="grid grid-cols-2 gap-2 text-sm mb-3">
@@ -587,8 +599,14 @@
             }
             
             let photosHtml = '';
-            if (doc.file_url) photosHtml += `<a href="http://localhost:8000${doc.file_url}" target="_blank" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-download"></i> P1</a>`;
-            if (doc.file_url_2) photosHtml += `<a href="http://localhost:8000${doc.file_url_2}" target="_blank" class="text-blue-600 hover:text-blue-800"><i class="fas fa-download"></i> P2</a>`;
+            if (doc.file_url) {
+                photosHtml += `<a href="${formatFileUrl(doc.file_url)}" target="_blank" class="text-blue-600 hover:text-blue-800 mr-2" title="View P1"><i class="fas fa-eye"></i></a>`;
+                photosHtml += `<a href="${formatFileUrl(doc.file_url)}?download=" class="text-green-600 hover:text-green-800 mr-2" title="Download P1"><i class="fas fa-download"></i></a>`;
+            }
+            if (doc.file_url_2) {
+                photosHtml += `<a href="${formatFileUrl(doc.file_url_2)}" target="_blank" class="text-blue-600 hover:text-blue-800 mr-2" title="View P2"><i class="fas fa-eye"></i></a>`;
+                photosHtml += `<a href="${formatFileUrl(doc.file_url_2)}?download=" class="text-green-600 hover:text-green-800 mr-2" title="Download P2"><i class="fas fa-download"></i></a>`;
+            }
 
             const el = document.createElement('div');
             el.className = 'flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-lg text-sm';
