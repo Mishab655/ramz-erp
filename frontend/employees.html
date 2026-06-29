@@ -55,20 +55,22 @@
                     <h2 class="text-2xl font-bold text-slate-800">Employees</h2>
                     <p class="text-slate-500 text-sm mt-1">Manage employee records</p>
                 </div>
-                <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                <div class="flex flex-col sm:flex-row flex-wrap gap-3 w-full sm:w-auto">
                     <div class="relative w-full sm:flex-1 sm:w-64">
                         <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
-                        <input type="text" id="searchInput" placeholder="Search by name..." class="pl-10 pr-4 py-2 w-full border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        <input type="text" id="searchInput" placeholder="Search by name..." class="pl-10 pr-4 w-full h-10 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
                     </div>
-                    <select id="branchFilter" class="flex-1 sm:flex-none border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm px-3 py-2 bg-white">
+                    <select id="branchFilter" class="w-full sm:w-auto h-10 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm px-3 bg-white">
                         <option value="">All Branches</option>
                     </select>
-                    <button onclick="openTrashModal()" class="flex-1 sm:flex-none justify-center bg-slate-200 text-slate-700 px-4 py-2 rounded-lg shadow hover:bg-slate-300 transition text-sm flex items-center whitespace-nowrap">
-                        <i class="fas fa-trash-restore mr-1"></i> Trash
-                    </button>
-                    <a href="employee_detail.html?action=new" class="flex-1 sm:flex-none justify-center bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition text-sm flex items-center whitespace-nowrap">
-                        <i class="fas fa-plus mr-1"></i> Add
-                    </a>
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <button onclick="openTrashModal()" class="flex-1 sm:flex-none justify-center h-10 bg-slate-200 text-slate-700 px-4 rounded-lg shadow hover:bg-slate-300 transition text-sm flex items-center whitespace-nowrap">
+                            <i class="fas fa-trash-restore mr-1"></i> Trash
+                        </button>
+                        <a href="employee_detail.html?action=new" class="flex-1 sm:flex-none justify-center h-10 bg-blue-600 text-white px-4 rounded-lg shadow hover:bg-blue-700 transition text-sm flex items-center whitespace-nowrap">
+                            <i class="fas fa-plus mr-1"></i> Add
+                        </a>
+                    </div>
                 </div>
             </div>
 
