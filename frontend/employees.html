@@ -49,7 +49,7 @@
         </header>
 
         <!-- Page Content -->
-        <main class="flex-1 overflow-y-auto p-6 bg-slate-50 fade-in">
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50 fade-in">
             <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h2 class="text-2xl font-bold text-slate-800">Employees</h2>
@@ -80,17 +80,17 @@
                     <table class="w-full text-left text-sm text-slate-600 whitespace-nowrap">
                         <thead class="bg-slate-50 text-slate-500 font-medium">
                             <tr>
-                                <th class="px-6 py-4">Employee</th>
-                                <th class="px-6 py-4 hidden md:table-cell">Branch</th>
-                                <th class="px-6 py-4 hidden md:table-cell">Visa Expiry</th>
-                                <th class="px-6 py-4 hidden md:table-cell">ID Expiry</th>
-                                <th class="px-6 py-4 hidden md:table-cell">Pending Salary</th>
-                                <th class="px-6 py-4">Status</th>
-                                <th class="px-6 py-4 text-center">Actions</th>
+                                <th class="px-3 py-3 sm:px-6 sm:py-4">Employee</th>
+                                <th class="px-3 py-3 sm:px-6 sm:py-4 hidden md:table-cell">Branch</th>
+                                <th class="px-3 py-3 sm:px-6 sm:py-4 hidden md:table-cell">Visa Expiry</th>
+                                <th class="px-3 py-3 sm:px-6 sm:py-4 hidden md:table-cell">ID Expiry</th>
+                                <th class="px-3 py-3 sm:px-6 sm:py-4 hidden md:table-cell">Pending Salary</th>
+                                <th class="px-3 py-3 sm:px-6 sm:py-4">Status</th>
+                                <th class="px-3 py-3 sm:px-6 sm:py-4 text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="employeesTableBody" class="divide-y divide-slate-100">
-                            <tr><td colspan="7" class="px-6 py-10 text-center">Loading...</td></tr>
+                            <tr><td colspan="7" class="px-3 py-8 sm:px-6 sm:py-10 text-center">Loading...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -183,7 +183,7 @@
             const branch_id = document.getElementById('branchFilter').value;
             const tbody = document.getElementById('employeesTableBody');
             
-            tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-10 text-center text-slate-500">Loading employees...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" class="px-3 py-8 sm:px-6 sm:py-10 text-center text-slate-500">Loading employees...</td></tr>';
             
             try {
                 let url = '/employees/';
@@ -196,7 +196,7 @@
                 tbody.innerHTML = '';
                 
                 if (employees.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-10 text-center text-slate-500">No employees found.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="7" class="px-3 py-8 sm:px-6 sm:py-10 text-center text-slate-500">No employees found.</td></tr>';
                     return;
                 }
 
@@ -219,24 +219,24 @@
                     const statusClass = emp.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700';
 
                     tr.innerHTML = `
-                        <td class="px-6 py-4 font-medium text-slate-800 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold overflow-hidden border border-slate-300">
-                                ${emp.photo_url ? `<img src="http://localhost:8000${emp.photo_url}" class="w-full h-full object-cover">` : emp.full_name.charAt(0)}
+                        <td class="px-3 py-3 sm:px-6 sm:py-4 font-medium text-slate-800 flex items-center gap-2 sm:gap-3">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold overflow-hidden border border-slate-300 shrink-0">
+                                ${emp.photo_url ? \`<img src="http://localhost:8000${emp.photo_url}" class="w-full h-full object-cover">\` : emp.full_name.charAt(0)}
                             </div>
                             <div>
-                                <div class="font-semibold">${emp.full_name}</div>
-                                <div class="text-xs text-slate-500">${emp.phone_number}</div>
+                                <div class="font-semibold text-sm sm:text-base">${emp.full_name}</div>
+                                <div class="text-[10px] sm:text-xs text-slate-500">${emp.phone_number}</div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-slate-600 hidden md:table-cell">Branch ${emp.branch_id}</td>
-                        <td class="px-6 py-4 hidden md:table-cell ${visaClass}">${visaDate.toLocaleDateString()}</td>
-                        <td class="px-6 py-4 hidden md:table-cell ${idClass}">${idDate.toLocaleDateString()}</td>
-                        <td class="px-6 py-4 hidden md:table-cell font-semibold ${emp.salary_pending > 0 ? 'text-red-500' : 'text-slate-600'}">AED ${emp.salary_pending}</td>
-                        <td class="px-6 py-4">
-                            <span class="px-2 py-1 rounded-full text-xs font-medium ${statusClass}">${emp.status}</span>
+                        <td class="px-3 py-3 sm:px-6 sm:py-4 text-slate-600 hidden md:table-cell">Branch ${emp.branch_id}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-4 hidden md:table-cell ${visaClass}">${visaDate.toLocaleDateString()}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-4 hidden md:table-cell ${idClass}">${idDate.toLocaleDateString()}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-4 hidden md:table-cell font-semibold ${emp.salary_pending > 0 ? 'text-red-500' : 'text-slate-600'}">AED ${emp.salary_pending}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-4">
+                            <span class="px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium ${statusClass}">${emp.status}</span>
                         </td>
-                        <td class="px-6 py-4 text-center">
-                            <a href="employee_detail.html?id=${emp.id}" class="text-blue-600 hover:text-blue-800 transition px-2 py-1 bg-blue-50 rounded">View / Edit</a>
+                        <td class="px-3 py-3 sm:px-6 sm:py-4 text-center">
+                            <a href="employee_detail.html?id=${emp.id}" class="text-blue-600 hover:text-blue-800 transition px-2 py-1 bg-blue-50 rounded text-xs sm:text-sm whitespace-nowrap">View / Edit</a>
                         </td>
                     `;
                     tbody.appendChild(tr);
