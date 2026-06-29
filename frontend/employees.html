@@ -79,10 +79,10 @@
                         <thead class="bg-slate-50 text-slate-500 font-medium">
                             <tr>
                                 <th class="px-6 py-4">Employee</th>
-                                <th class="px-6 py-4">Branch</th>
-                                <th class="px-6 py-4">Visa Expiry</th>
-                                <th class="px-6 py-4">ID Expiry</th>
-                                <th class="px-6 py-4">Pending Salary</th>
+                                <th class="px-6 py-4 hidden md:table-cell">Branch</th>
+                                <th class="px-6 py-4 hidden md:table-cell">Visa Expiry</th>
+                                <th class="px-6 py-4 hidden md:table-cell">ID Expiry</th>
+                                <th class="px-6 py-4 hidden md:table-cell">Pending Salary</th>
                                 <th class="px-6 py-4">Status</th>
                                 <th class="px-6 py-4 text-center">Actions</th>
                             </tr>
@@ -226,10 +226,10 @@
                                 <div class="text-xs text-slate-500">${emp.phone_number}</div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-slate-600">Branch ${emp.branch_id}</td>
-                        <td class="px-6 py-4 ${visaClass}">${visaDate.toLocaleDateString()}</td>
-                        <td class="px-6 py-4 ${idClass}">${idDate.toLocaleDateString()}</td>
-                        <td class="px-6 py-4 font-semibold ${emp.salary_pending > 0 ? 'text-red-500' : 'text-slate-600'}">AED ${emp.salary_pending}</td>
+                        <td class="px-6 py-4 text-slate-600 hidden md:table-cell">Branch ${emp.branch_id}</td>
+                        <td class="px-6 py-4 hidden md:table-cell ${visaClass}">${visaDate.toLocaleDateString()}</td>
+                        <td class="px-6 py-4 hidden md:table-cell ${idClass}">${idDate.toLocaleDateString()}</td>
+                        <td class="px-6 py-4 hidden md:table-cell font-semibold ${emp.salary_pending > 0 ? 'text-red-500' : 'text-slate-600'}">AED ${emp.salary_pending}</td>
                         <td class="px-6 py-4">
                             <span class="px-2 py-1 rounded-full text-xs font-medium ${statusClass}">${emp.status}</span>
                         </td>
